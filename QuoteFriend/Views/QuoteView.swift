@@ -11,6 +11,7 @@ struct QuoteView: View {
     
     var quote: Quote
     var quoteCollection: QuoteCollection
+  let screenSize = UIScreen.main.bounds.size
     @State var offset: CGSize = .zero
     @Environment(\.managedObjectContext) var context
     
@@ -36,17 +37,25 @@ struct QuoteView: View {
                 Button(action: {
                     judgeQuote(approve: true)
                 }, label: {
-                    Circle()
+                  Image(systemName: "checkmark.circle.fill")
+                    .resizable()
+                    .scaledToFit()
                         .foregroundColor(.green)
-                        .frame(width: 60, height: 60)
+                        .background(.white)
+                        .clipShape(Circle())
+                        .frame(width: screenSize.width / 5.0)
                 })
                 Spacer()
                 Button(action: {
                     judgeQuote(approve: false)
                 }, label: {
-                    Circle()
+                  Image(systemName: "xmark.circle.fill")
+                    .resizable()
+                    .scaledToFit()
                         .foregroundColor(.red)
-                        .frame(width: 60, height: 60)
+                        .background(.white)
+                        .clipShape(Circle())
+                        .frame(width: screenSize.width / 5.0)
                 })
             }
             .padding()
@@ -59,8 +68,8 @@ struct QuoteView: View {
             .resizable()
             .scaledToFit()
             .foregroundColor(offset.width > 0 ? .green : .red)
-            .opacity(abs(offset.width) / 200.0)
-            .frame(width: abs(offset.width))
+            .opacity(abs(offset.width) / 150.0)
+            .frame(width: abs(offset.width) + 40)
         })
         .offset(offset)
         .animation(.easeIn, value: offset)
@@ -97,5 +106,6 @@ struct QuoteView: View {
 
 struct QuoteView_Previews: PreviewProvider {
     static var previews: some View {
-      QuoteView(quote: Quote(q: "No doubt a terribly deep thing said once in the past, and indeed it is an extemely long quote that might perhaps struggle to fit in the quote view at its current size, perhaps it could be resized to some degree.", a: "Someone Famous", h: "AAA"), quoteCollection: QuoteCollection())    }
+      QuoteView(quote: Quote(q: "No doubt a terribly deep thing said once in the past, and indeed it is an extemely long quote that might perhaps struggle to fit in the quote view at its current size, perhaps it could be resized to some degree.", a: "Someone Famous", h: "AAA"), quoteCollection: QuoteCollection())
+    }
 }
