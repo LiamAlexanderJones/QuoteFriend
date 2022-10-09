@@ -54,6 +54,14 @@ struct QuoteView: View {
         .background(Color.black)
         .cornerRadius(25)
         .padding(10)
+        .overlay(content: {
+          Image(systemName: offset.width > 0 ? "checkmark.circle" : "xmark.circle")
+            .resizable()
+            .scaledToFit()
+            .foregroundColor(offset.width > 0 ? .green : .red)
+            .opacity(abs(offset.width) / 200.0)
+            .frame(width: abs(offset.width))
+        })
         .offset(offset)
         .animation(.easeIn, value: offset)
         .gesture(
