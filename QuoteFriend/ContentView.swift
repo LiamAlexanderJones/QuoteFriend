@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+  
+  @Environment(\.managedObjectContext) var context
+  @StateObject var quoteCollection = QuoteCollection()
     
     var body: some View {
         
         TabView {
-            QuoteListView()
+            QuoteListView(quoteCollection: quoteCollection)
                 .tabItem {
                     Label("Find New", systemImage: "quote.bubble")
                 }
@@ -25,6 +28,7 @@ struct ContentView: View {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
         }
+        .onAppear { quoteCollection.loadQuotes(context: context) }
 
     }
 }

@@ -13,12 +13,6 @@ import SwiftUI
 class QuoteCollection: ObservableObject {
     
     
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \QuoteManagedObject.q, ascending: true)],
-        predicate: nil,
-        animation: .default
-    ) private var savedQuotes: FetchedResults<QuoteManagedObject>
-    
     @Published var downloadedQuotes: [Quote] = []
     @Published var loadError: Error? = nil
     var subscriptions: Set<AnyCancellable> = []
@@ -26,28 +20,44 @@ class QuoteCollection: ObservableObject {
     
     init(client: APIClientProtocol = APIClient()) {
         self.client = client
-        loadQuotes()
     }
+  
+  
+  func loadQuotes(context: NSManagedObjectContext) {
     
-    func loadQuotes() {
-        client.publisher()
-            .sink(receiveCompletion: { result in
-                if case .failure(let error) = result {
-                    self.loadError = error
-                }
-            }, receiveValue: { quotes in
-                let filteredQuotes =  quotes.filter { quote in
-                    !self.savedQuotes.map { $0.q }.contains(quote.q)
-                }
-                //We need to filter out quotes the user has already saved from the results. It seems cleaner to do it here than in the view. Unfortunately, this makes it hard to test. (I can't get a simple fetch request to work).
-                self.downloadedQuotes = filteredQuotes
-            })
-            .store(in: &subscriptions)
-    }
+    client.publisher()
+      .map { quotes -> [Quote] in
+        //We filter out quotes the user has already saved. If we can't get the saved quotes, we just present the quotes as they are (rather than thorwing an error)
+        let fetchRequest: NSFetchRequest<QuoteManagedObject>
+        fetchRequest = QuoteManagedObject.fetchRequest()
+        let savedQuotes = try? context.fetch(fetchRequest).compactMap {
+          if let q = $0.q, let a = $0.h, let h = $0.h {
+            return Quote(q: q, a: a, h: h)
+          } else {
+            return nil
+          }
+        }
+        if let savedQuotes = savedQuotes {
+          return Array(Set(quotes).subtracting(Set(savedQuotes)))
+        } else {
+          return quotes
+        }
+      }
+      .sink(receiveCompletion: { result in
+        if case .failure(let error) = result {
+          self.loadError = error
+        }
+      }, receiveValue: { quotes in
+        self.downloadedQuotes = quotes
+      })
+      .store(in: &subscriptions)
+  }
+
 
     
     
 }
+
 
 
 

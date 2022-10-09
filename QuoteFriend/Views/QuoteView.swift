@@ -81,15 +81,13 @@ struct QuoteView: View {
         QuoteManagedObject.save(quote: quote, approved: approve, context: context)
         if quote == quoteCollection.downloadedQuotes.first {
             quoteCollection.downloadedQuotes = []
-            quoteCollection.loadQuotes()
+            quoteCollection.loadQuotes(context: context)
         }
     }
     
 }
 
-//struct QuoteView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        QuoteView(quote: Quote(q: "No doubt a terribly deep thing said once in the past, and indeed it is an extemely long quote that might perhaps struggle to fit in the quote view at its current size, perhaps it could be resized to some degree.", a: "Someone Famous", h: "AAA"))
-//            .environmentObject(QuoteCollection())
-//    }
-//}
+struct QuoteView_Previews: PreviewProvider {
+    static var previews: some View {
+      QuoteView(quote: Quote(q: "No doubt a terribly deep thing said once in the past, and indeed it is an extemely long quote that might perhaps struggle to fit in the quote view at its current size, perhaps it could be resized to some degree.", a: "Someone Famous", h: "AAA"), quoteCollection: QuoteCollection())    }
+}

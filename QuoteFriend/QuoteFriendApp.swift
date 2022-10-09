@@ -12,13 +12,11 @@ import CoreData
 @main
 struct QuoteFriendApp: App {
     
-    //@StateObject var quoteCollection = QuoteCollection()
     @Environment(\.scenePhase) var phase
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                //.environmentObject(quoteCollection)
                 .environment(\.managedObjectContext, CoreDataStack.viewContext)
         }
         .onChange(of: phase) { newPhase in
