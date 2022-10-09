@@ -8,10 +8,8 @@
 import Foundation
 
 struct Quote: Codable, Equatable, Hashable {
-    
-    let q: String
-    let a: String
-    let h: String
-    
+  let q: String
+  let a: String
+  let h: String
 }
 

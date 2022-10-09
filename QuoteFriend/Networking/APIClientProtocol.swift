@@ -9,8 +9,6 @@ import Foundation
 import Combine
 
 protocol APIClientProtocol {
-    
-    func publisher() -> AnyPublisher<[Quote], Error>
-    
+  func publisher() -> AnyPublisher<[Quote], Error>
 }
 

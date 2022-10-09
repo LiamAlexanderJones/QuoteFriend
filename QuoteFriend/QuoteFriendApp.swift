@@ -11,41 +11,37 @@ import CoreData
 
 @main
 struct QuoteFriendApp: App {
-    
-    @Environment(\.scenePhase) var phase
-    
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, CoreDataStack.viewContext)
-        }
-        .onChange(of: phase) { newPhase in
-            if newPhase == .background {
-                CoreDataStack.save()
-            }
-        }
+  @Environment(\.scenePhase) var phase
+  
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
+        .environment(\.managedObjectContext, CoreDataStack.viewContext)
     }
+    .onChange(of: phase) { newPhase in
+      if newPhase == .background {
+        CoreDataStack.save()
+      }
+    }
+  }
 }
 
 private enum CoreDataStack {
-    
-    static var viewContext: NSManagedObjectContext = {
-        let container = NSPersistentContainer(name: "DataModel")
-        container.loadPersistentStores { _, error in
-            if let error = error {
-                fatalError("\(#file), \(#function), \(error.localizedDescription)")
-            }
-        }
-        return container.viewContext
-    }()
-    
-    static func save() {
-        do {
-            try viewContext.save()
-        } catch {
-            fatalError("\(#file), \(#function), \(error.localizedDescription)")
-        }
+  static var viewContext: NSManagedObjectContext = {
+    let container = NSPersistentContainer(name: "DataModel")
+    container.loadPersistentStores { _, error in
+      if let error = error {
+        fatalError("\(#file), \(#function), \(error.localizedDescription)")
+      }
     }
-    
+    return container.viewContext
+  }()
+  static func save() {
+    do {
+      try viewContext.save()
+    } catch {
+      fatalError("\(#file), \(#function), \(error.localizedDescription)")
+    }
+  }
 }
 

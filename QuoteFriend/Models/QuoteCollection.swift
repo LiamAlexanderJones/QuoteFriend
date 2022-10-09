@@ -11,20 +11,16 @@ import CoreData
 import SwiftUI
 
 class QuoteCollection: ObservableObject {
-    
-    
-    @Published var downloadedQuotes: [Quote] = []
-    @Published var loadError: Error? = nil
-    var subscriptions: Set<AnyCancellable> = []
-    let client: APIClientProtocol
-    
-    init(client: APIClientProtocol = APIClient()) {
-        self.client = client
-    }
+  @Published var downloadedQuotes: [Quote] = []
+  @Published var loadError: Error? = nil
+  var subscriptions: Set<AnyCancellable> = []
+  let client: APIClientProtocol
   
+  init(client: APIClientProtocol = APIClient()) {
+    self.client = client
+  }
   
   func loadQuotes(context: NSManagedObjectContext) {
-    
     client.publisher()
       .map { quotes -> [Quote] in
         //We filter out quotes the user has already saved. If we can't get the saved quotes, we just present the quotes as they are (rather than thorwing an error)
@@ -52,10 +48,6 @@ class QuoteCollection: ObservableObject {
       })
       .store(in: &subscriptions)
   }
-
-
-    
-    
 }
 
 

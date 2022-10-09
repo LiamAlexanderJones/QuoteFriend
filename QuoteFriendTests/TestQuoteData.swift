@@ -8,8 +8,8 @@
 import Foundation
 
 enum TestQuoteData {
-    
-    static let goodJson = """
+  
+  static let goodJson = """
 
 [
     {"q":"Life would be tragic if it weren't funny.","a":"Stephen Hawking","c":"41","h":"<blockquote>&ldquo;Life would be tragic if it weren't funny.&rdquo; &mdash; <footer>Stephen Hawking</footer></blockquote>"},
@@ -20,10 +20,10 @@ enum TestQuoteData {
 ]
 
 """
-    
-    static let badJson = """
+  
+  static let badJson = """
 [bad data]
 
 """
-    
+  
 }
